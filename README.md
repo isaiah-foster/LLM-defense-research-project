@@ -3,8 +3,8 @@ Description: Simple tkinter GUI to interface with developer-selected chatGPT mod
 Preconditions:
 1. Must be running python 3.13 or later (openai won't include in older versions)
 2. Must have openai installed (pip install openai)
+3. Must have an active API key for OpenaAI
 
 Instructions:
-1. Feel free to use my API key, however, please refrain from prompting extremely resource-intensive tasks on advanced models
-2. If you wish to use your API key, copy it to API_Key.txt
-3. To give ChatGPT system level commands, place commands in {"role": "system", "content": "your commands"}
+1. Copy your API key into API_Key.txt
+2. To give ChatGPT system level commands, place commands in {"role": "system", "content": "your commands"}
