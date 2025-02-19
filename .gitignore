@@ -7,7 +7,7 @@ __pycache__/
 .DS_Store
 
 #API Key
-API_KEY.txt
+API_Key.txt
 
 # C extensions
 *.so
