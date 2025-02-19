@@ -6,5 +6,6 @@ Preconditions:
 3. Must have an active API key for OpenaAI
 
 Instructions:
-1. Copy your API key into API_Key.txt
-2. To give ChatGPT system level commands, place commands in {"role": "system", "content": "your commands"}
+1. Create an API_Key.txt file in your project 
+2. Copy your API key into API_Key.txt
+3. To give ChatGPT system level commands, place commands in {"role": "system", "content": "your commands"}
