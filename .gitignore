@@ -6,6 +6,9 @@ __pycache__/
 #Mac Folder Files
 .DS_Store
 
+#API Key
+API_KEY.txt
+
 # C extensions
 *.so
 
