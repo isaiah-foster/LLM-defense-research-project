@@ -31,20 +31,10 @@ def chat_with_gpt(prompt):
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  #model type
-            messages=
-            [
-                {"role": "system", "content": prompt1}, #allows input of system messages
-                {"role": "user", "content": prompt} # user input in tkinter used as user message
-            ],
-            response_format=
-            {
-            "type": "text"
-            },
-            temperature=1,  #Set randomness of response output. 0 is deterministic, 2 is maximum randomness
-            max_completion_tokens=2048, #limit token usage
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
+            messages=[
+                {"role": "system", "content": prompt1},
+                {"role": "user", "content": prompt}
+            ]
         )
         return response.choices[0].message.content
     except Exception as e:
