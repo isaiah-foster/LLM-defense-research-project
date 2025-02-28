@@ -50,9 +50,6 @@ def chat_with_gpt(prompt):
     except Exception as e:
         return "Error: " + str(e)
 
-
-
-
 # GUI setup
 root = tk.Tk()
 root.title("AttackGPT")
