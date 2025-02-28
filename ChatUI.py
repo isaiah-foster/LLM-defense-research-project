@@ -34,7 +34,16 @@ def chat_with_gpt(prompt):
             messages=[
                 {"role": "system", "content": prompt1},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+             response_format=
+            {
+            "type": "text"
+            },
+            temperature=1,  #Set randomness of response output. 0 is deterministic, 2 is maximum randomness
+            max_completion_tokens=2048, #limit token usage
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
         )
         return response.choices[0].message.content
     except Exception as e:
