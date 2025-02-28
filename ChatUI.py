@@ -33,7 +33,7 @@ def chat_with_gpt(prompt):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  #model type
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": promptList[2]},
                 {"role": "user", "content": prompt}
             ],
              response_format=
@@ -49,6 +49,9 @@ def chat_with_gpt(prompt):
         return response.choices[0].message.content
     except Exception as e:
         return "Error: " + str(e)
+
+
+
 
 # GUI setup
 root = tk.Tk()
