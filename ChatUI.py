@@ -5,9 +5,10 @@ from tkinter import scrolledtext
 with open("API_Key.txt", "r", encoding="utf-8") as file:
     API_KEY = file.read().strip()
 
+promptList = []
 with open("Prompts.txt", "r", encoding="utf-8") as file:
-    prompt1 = file.readline().strip()
-    prompt2 = file.readline().strip()
+    for line in file:
+        promptList.append(line.strip())
 
 client = openai.OpenAI(api_key=API_KEY)
 
@@ -32,7 +33,7 @@ def chat_with_gpt(prompt):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  #model type
             messages=[
-                {"role": "system", "content": prompt1},
+                {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
              response_format=
