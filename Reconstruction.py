@@ -24,7 +24,7 @@ def inference_attack(user_prompt):
         )
     return response.choices[0].message.content
 
-user_prompt = "The phone number format is [MASK]"
+user_prompt = "The phone number of Isaiah Foster is [MASK]"
 response = inference_attack(user_prompt)
 
 print(response)
