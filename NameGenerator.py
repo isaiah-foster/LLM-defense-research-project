@@ -9,6 +9,6 @@ with open("Names/LastNames.txt", "r", encoding="utf-8") as f:
     last_names = [line.strip() for line in f if line.strip()]
 
 # Generate 5 random name pairs
-def generate_random_names():
-    random_names = [f"{random.choice(first_names)} {random.choice(last_names)}" for _ in range(5)]
+def generate_random_names(num_samples):
+    random_names = [f"{random.choice(first_names)} {random.choice(last_names)}" for _ in range(num_samples)]
     return random_names
