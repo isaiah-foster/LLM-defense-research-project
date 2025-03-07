@@ -16,15 +16,15 @@ Program 1: Chat_GPT_UI.py
 1. Utilizes TKinter to implement a GUI to interact with ChatGPT similarly to the website
 2. Takes system prompts to dictate the model's behavior before launching the application
 
-Program 2: Inference.py
-1. Uses GPT-3.5-turbo to perform an inference attack on a prompt
+Program 2: Reconstruction.py
+1. Uses GPT-3.5-turbo to perform a reconstruction attack on a prompt
 2. Takes a custom system prompt to encourage the model to generate a specific response in a specific format
 3. User prompt should include a [MASK] token to be inferred by the model
 4. Returns the model's response to the user prompt - will often deny requests for PII
 5. Limits token usage based on required output length
 
-Program 3: Reconstruction.py
-1. Uses GPT-3.5-turbo to perform a reconstruction attack on a prompt
+Program 3: Inference.py
+1. Uses GPT-3.5-turbo to perform an inference attack on a prompt
 2. Takes a custom system prompt to encourage the model to generate a specific response in a specific format
 3. User prompt should include a [MASK] token and possible tokens for the model to replace [MASK] with
 4. Returns softmaxed probabilities of all given PII tokens
