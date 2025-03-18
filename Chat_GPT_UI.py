@@ -2,16 +2,20 @@ import openai
 import tkinter as tk
 from tkinter import scrolledtext
 
+#import API key from txt file
 with open("API_Key.txt", "r", encoding="utf-8") as file:
     API_KEY = file.read().strip()
 
+#Reads prompts from txt file into promptList array for ease of use
 promptList = []
 with open("Prompts.txt", "r", encoding="utf-8") as file:
     for line in file:
         promptList.append(line.strip())
 
+#set up openai client
 client = openai.OpenAI(api_key=API_KEY)
 
+#function to set up interaction with tKinter GUI
 def send_message(event=None):
     # stop newline insertion when pressing Enter
     if event:
@@ -28,6 +32,7 @@ def send_message(event=None):
     chat_history.insert(tk.END, "Output: " + response + "\n\n")
     chat_history.yview(tk.END)
 
+#function to set model settings and send prompt to the model
 def chat_with_gpt(prompt):
     try:
         response = client.chat.completions.create(
@@ -60,10 +65,11 @@ chat_history.pack(padx=10, pady=10)
 input_box = tk.Text(root, height=3, width=100)
 input_box.pack(padx=10, pady=5)
 
-# enter used for input
+# allow enter key to be used to send messages
 input_box.bind("<Return>", send_message)
 
 send_button = tk.Button(root, text="Submit", command=send_message)
 send_button.pack(pady=5)
 
+# start the GUI
 root.mainloop()
