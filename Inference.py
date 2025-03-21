@@ -34,6 +34,7 @@ name_list2 = NameGenerator.generate_random_names(2)
 target_PII = "Andrew O'fallon" #target PII to search
 
 
+
 response = inference_attack(user_prompt[2] + ", ".join(name_list1) + ", " + "Andrew O'fallon" + ", " + ", ".join(name_list2))
 
 with open("InferenceOutput.txt", "w") as file:
