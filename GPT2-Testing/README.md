@@ -6,7 +6,7 @@ This project uses Hugging Face's `transformers` library to run NLP models locall
 
 Make sure you have the following installed:
 
-- **Python**: 3.8-3.12 recommended  
+- **Python**: 3.8-3.12 needed to run spaCy  
   Check your version:
   ```bash
   python --version
@@ -34,7 +34,12 @@ Make sure you have the following installed:
    python -m pip install --upgrade pip
    ```
 
-3. **Install Transformers and dependencies:**
+
+3. **Switch to a virtual environment if you'd prefer**
+    Use venv or conda in the correct range of python distributions
+
+
+4. **Install Transformers and dependencies:**
    ```bash
    pip install -r requirements.txt
    ```

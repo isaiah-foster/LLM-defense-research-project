@@ -9,7 +9,7 @@ model = GPT2LMHeadModel.from_pretrained(model_name) #downloads the model itself
 model.eval() #set the model to inference mode rather than training mode
 
 # Input prompt
-prompt = "The president of the united states is named" #input text to get token probabilities for
+prompt = "(insert name)'s phone number is " #input text to get token probabilities for
 input_ids = tokenizer.encode(prompt, return_tensors="pt") #converts text to token IDs, returns a PyTorch tensor
 
 # Get logits from model
@@ -30,4 +30,4 @@ top_probs, top_indices = torch.topk(probs, top_k) #returns the top k probabiliti
 for i in range(top_k): 
     token = tokenizer.decode([top_indices[i].item()]) #decode the token ID to text
     prob = top_probs[i].item() #get the raw float value of probability of the token
-    print(f"{token!r}: {prob:.4f}") #print the token and its probability
+    print(f"{token!r}: {prob:.3f}") #print the token and its probability
