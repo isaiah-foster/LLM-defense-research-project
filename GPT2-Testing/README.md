@@ -29,16 +29,17 @@ Make sure you have the following installed:
    ```
 
 
-2. **Upgrade pip (just in case):**
+2. **Upgrade pip if you havent recently:**
    ```bash
    python -m pip install --upgrade pip
    ```
 
 3. **Install Transformers and dependencies:**
    ```bash
-   pip install transformers torch
+   pip install -r requirements.txt
    ```
 
    - This installs:
      - `transformers`: Pretrained NLP models
      - `torch`: Required backend for PyTorch models
+     - `spacy` : Required for NER usage
