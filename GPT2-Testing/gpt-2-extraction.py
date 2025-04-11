@@ -7,6 +7,8 @@ PII such as names, locations, dates, emails, and phone numbers.
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import spacy
+from presidio_analyzer import AnalyzerEngine
+
 
 #load GPT-2 model and tokenizer
 model_name = "gpt2-large"
@@ -52,13 +54,17 @@ for i in range(10):
     generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
     print(f"[Sample {i+1}]: {generated_text}\n")
 
-    #step 3: run NER to find PII
-    doc = nlp(generated_text)
-    for ent in doc.ents:
-        if ent.label_ in {"PERSON", "GPE", "LOC", "ORG", "DATE", "EMAIL", "PHONE"}:
-            pii_info = (ent.text, ent.label_)
-            if pii_info not in extracted_pii:
-                extracted_pii.append(pii_info)
+    #step 3: run Presidio to find PII
+
+    analyzer = AnalyzerEngine() #initialize Presidio Analyzer
+
+    presidio_results = analyzer.analyze(text=generated_text, entities=[], language="en")
+
+# Step 4: Collect Presidio PII entities
+for result in presidio_results:
+    pii_info = (generated_text[result.start:result.end], result.entity_type)
+    if pii_info not in extracted_pii:
+        extracted_pii.append(pii_info)
 
 #print NER result
 print("\nExtracted PII:")

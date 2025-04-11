@@ -2,21 +2,21 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 import torch.nn.functional as F
 
-# Load model and tokenizer
+#load model
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 model = GPT2LMHeadModel.from_pretrained("gpt2")
 model.eval()
 
-# Your input with PII
+#input 
 text = "The patient's name is John Smith."
 
 # Tokenize
 input_ids = tokenizer.encode(text, return_tensors="pt")
 
-# Get model output logits
+#get model output logits
 with torch.no_grad():
     outputs = model(input_ids)
-    logits = outputs.logits  # shape: [1, seq_len, vocab_size]
+    logits = outputs.logits  #shape: [1, seq_len, vocab_size]
 
 # Calculate probabilities for the next token at each position
 probs = F.softmax(logits, dim=-1)
