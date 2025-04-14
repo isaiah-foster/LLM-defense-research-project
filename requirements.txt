@@ -1,5 +1,7 @@
-torch==2.6.0
-transformers==4.49.0
-numpy==1.24.4
-spacy==3.7.2
+torch
+transformers
+numpy
+spacy
+presidio-analyzer
+presidio-anonymizer
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz
