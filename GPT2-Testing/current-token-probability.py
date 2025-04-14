@@ -1,55 +1,74 @@
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 import torch.nn.functional as F
-
-#load model
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-model = GPT2LMHeadModel.from_pretrained("gpt2")
-model.eval()
-
-#input 
-text = "The patient's name is John Smith."
-
-# Tokenize
-input_ids = tokenizer.encode(text, return_tensors="pt")
-
-#get model output logits
-with torch.no_grad():
-    outputs = model(input_ids)
-    logits = outputs.logits  #shape: [1, seq_len, vocab_size]
-
-# Calculate probabilities for the next token at each position
-probs = F.softmax(logits, dim=-1)
-
-# Let's say you want to find the probability of "Smith" being predicted
-# First, isolate the token index for "Smith"
-smith_id = tokenizer.encode(" Smith")[0]  # include leading space!
-
-# Get the position where "Smith" appears
-decoded_tokens = tokenizer.convert_ids_to_tokens(input_ids[0])
-smith_pos = decoded_tokens.index(" Smith")
-
-# Get the probability of "Smith" at that position
-prob_smith = probs[0, smith_pos, smith_id].item()
-
-print(f"Probability of 'Smith' at position {smith_pos}: {prob_smith:.6f}")
+from presidio_analyzer import AnalyzerEngine
 
 
-#second thing to add multiple probs
-# For " John Smith"
-tokens = tokenizer.encode(" John Smith")
-log_probs = []
-for i in range(1, len(tokens)):
-    context = tokens[:i]
-    target = tokens[i]
+def compute_pii_token_probs(pii_text, tokenizer, model):
+    """Compute token-level probabilities for a given PII text using a GPT-2 model.
 
-    context_ids = torch.tensor([context])
-    with torch.no_grad():
-        outputs = model(context_ids)
-        probs = F.softmax(outputs.logits, dim=-1)
-    
-    prob = probs[0, -1, target].item()
-    log_probs.append(torch.log(torch.tensor(prob)))
+    If the PII text does not start with a space, one is added, because GPT-2's tokenization
+    is sensitive to whitespace. Returns a tuple:
+      (list of token strings, list of probabilities, list of log probabilities, joint log probability)
+    """
+    #add leading space
+    if not pii_text.startswith(' '):
+        pii_text = ' ' + pii_text
 
-joint_log_prob = sum(log_probs)
-print(f"Log probability of 'John Smith': {joint_log_prob.item():.6f}")
+    #tokenize PII text
+    tokens = tokenizer.encode(pii_text)
+    tokens_str = tokenizer.convert_ids_to_tokens(tokens)
+
+    log_probs = []
+    token_probs = []
+
+    #compute probability for each token (starting from the second token, as GPT-2 computes
+    # each token probability conditioned on the preceding context)
+    for i in range(1, len(tokens)):
+        context = torch.tensor([tokens[:i]])
+        with torch.no_grad():
+            outputs = model(context)
+            probs = F.softmax(outputs.logits, dim=-1)
+        prob = probs[0, -1, tokens[i]].item()
+        token_probs.append(prob)
+        log_prob = torch.log(torch.tensor(prob)).item()
+        log_probs.append(log_prob)
+
+    joint_log_prob = sum(log_probs)
+    return tokens_str, token_probs, log_probs, joint_log_prob
+
+if __name__ == '__main__':
+    #prompt user for input text
+    text = input("Enter phrase: ")
+
+    # Load GPT-2 model and tokenizer
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2-large")
+    model = GPT2LMHeadModel.from_pretrained("gpt2-large")
+    model.eval()
+
+    # Initialize the Presidio AnalyzerEngine for PII detection
+    analyzer = AnalyzerEngine()
+    pii_results = analyzer.analyze(text=text, language="en")
+
+    if not pii_results:
+        print("no PII  detected.")
+    else:
+        print("detected PII entities:")
+        for res in pii_results:
+            # Extract the detected PII text from the original text using the start and end indices
+            pii_text = text[res.start:res.end]
+            print(f"Entity: {res.entity_type} -> \"{pii_text}\"")
+
+            # Compute token-level probabilities for the extracted PII text
+            tokens_str, token_probs, log_probs, joint_log_prob = compute_pii_token_probs(pii_text, tokenizer, model)
+            
+            if len(token_probs) == 0:
+                print("  not enough tokens tocompute")
+            elif len(token_probs) == 1:
+                # Single token case
+                print(f"  Token '{tokens_str[1]}': probability = {token_probs[0]:.3f}, log probability = {log_probs[0]:.3f}")
+            else:
+                # Multiple tokens case: print each token's probability and its log probability
+                for i in range(1, len(tokens_str)):
+                    print(f"  Token '{tokens_str[i]}': probability = {token_probs[i-1]:.3f}, log probability = {log_probs[i-1]:.3f}")
+                print(f"  combined log probability of the PII phrase: {joint_log_prob:.3f}")
