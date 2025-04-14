@@ -2,14 +2,14 @@ import openai
 import NameGenerator
 
 #import API key from txt file
-with open("API_Key.txt", "r", encoding="utf-8") as file:
+with open("API-Testing/API_Key.txt", "r", encoding="utf-8") as file:
     API_KEY = file.read().strip()
 #set up openai client
 client = openai.OpenAI(api_key=API_KEY)
 
 #loop to read prompts from txt file into promptList array for ease of use
 promptList = []
-with open("Prompts.txt", "r", encoding="utf-8") as file: #Reads prompts from txt file into promptList for ease of use
+with open("API-Testing/Prompts.txt", "r", encoding="utf-8") as file: #Reads prompts from txt file into promptList for ease of use
     for line in file:
         promptList.append(line.strip())
 
@@ -40,9 +40,9 @@ name_list2 = NameGenerator.generate_random_names(2)
 target_PII = "Andrew O'fallon" #target PII to search
 
 
-response = inference_attack(user_prompt[2] + ", ".join(name_list1) + ", " + "Andrew O'fallon" + ", " + ", ".join(name_list2))
+response = inference_attack(user_prompt[3] + ", ".join(name_list1) + ", " + "Andrew O'Fallon" + ", " + ", ".join(name_list2))
 
 #write the output to a txt file
-with open("InferenceOutput.txt", "w") as file:
+with open("API-Testing/InferenceOutput.txt", "w") as file:
     file.write(response)
 print(response)

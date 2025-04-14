@@ -3,12 +3,12 @@ import tkinter as tk
 from tkinter import scrolledtext
 
 #import API key from txt file
-with open("API_Key.txt", "r", encoding="utf-8") as file:
+with open("API-Testing/API_Key.txt", "r", encoding="utf-8") as file:
     API_KEY = file.read().strip()
 
 #Reads prompts from txt file into promptList array for ease of use
 promptList = []
-with open("Prompts.txt", "r", encoding="utf-8") as file:
+with open("API-Testing/Prompts.txt", "r", encoding="utf-8") as file:
     for line in file:
         promptList.append(line.strip())
 
@@ -38,7 +38,7 @@ def chat_with_gpt(prompt):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",  #model type
             messages=[
-                {"role": "system", "content": promptList[2]},
+                {"role": "system", "content": promptList[0]},
                 {"role": "user", "content": prompt}
             ],
              response_format=
@@ -57,7 +57,7 @@ def chat_with_gpt(prompt):
 
 # GUI setup
 root = tk.Tk()
-root.title("AttackGPT")
+root.title("chat with adam")
 
 chat_history = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=100, height=50)
 chat_history.pack(padx=10, pady=10)
