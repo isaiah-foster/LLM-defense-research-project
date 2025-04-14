@@ -2,10 +2,10 @@
 import random
 
 # Read first and last names from txt files to new lists
-with open("Names/FirstNames.txt", "r", encoding="utf-8") as f:
+with open("API-Testing/Names/FirstNames.txt", "r", encoding="utf-8") as f:
     first_names = [line.strip() for line in f if line.strip()]
 
-with open("Names/LastNames.txt", "r", encoding="utf-8") as f:
+with open("API-Testing/Names/LastNames.txt", "r", encoding="utf-8") as f:
     last_names = [line.strip() for line in f if line.strip()]
 
 # Generate {n} random name pairs
