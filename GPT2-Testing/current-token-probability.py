@@ -6,19 +6,34 @@ from presidio_analyzer import AnalyzerEngine
 
 def compute_pii_token_probs(pii_text, tokenizer, model):
     """Compute token-level probabilities for a given PII text using a GPT-2 model.
-
+s
     If the PII text does not start with a space, one is added, because GPT-2's tokenization
     is sensitive to whitespace. Returns a tuple:
       (list of token strings, list of probabilities, list of log probabilities, joint log probability)
     """
-    #add leading space
+    split_input = False
+    #splits the input into 2 if it has a space
+    if ' ' in pii_text :
+     split_input = True
+     #add leading space
     if not pii_text.startswith(' '):
         pii_text = ' ' + pii_text
-
-    #tokenize PII text
-    tokens = tokenizer.encode(pii_text)
+    #splits the first and last name and adds them to the tokenizer's vocabulary
+    if split_input == True :
+     first, last = pii_text.split()
+     last_with_space = " " + last
+     tokenizer.add_tokens(first)
+     tokenizer.add_tokens(last_with_space)
+     model.resize_token_embeddings(len(tokenizer))
+     #prints the input to be tokenzied
+    print("Input: " + pii_text)
+     #tokenize PII text
+    tokens = tokenizer.encode(pii_text, is_split_into_words=True, add_special_tokens=False)
+    #prints the tokens created
+    print("Tokens: ", tokens)
+    #prints the token strings
     tokens_str = tokenizer.convert_ids_to_tokens(tokens)
-
+    print("Token Strings: ", tokens_str)
     log_probs = []
     token_probs = []
 
