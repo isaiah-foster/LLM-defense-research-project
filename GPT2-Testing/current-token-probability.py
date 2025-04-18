@@ -21,7 +21,7 @@ s
     #splits the first and last name and adds them to the tokenizer's vocabulary
     if split_input == True :
      first, last = pii_text.split()
-     last_with_space = " " + last
+     last_with_space = last
      tokenizer.add_tokens(first)
      tokenizer.add_tokens(last_with_space)
      model.resize_token_embeddings(len(tokenizer))
@@ -81,9 +81,9 @@ if __name__ == '__main__':
                 print("  not enough tokens tocompute")
             elif len(token_probs) == 1:
                 # Single token case
-                print(f"  Token '{tokens_str[1]}': probability = {token_probs[0]:.3f}, log probability = {log_probs[0]:.3f}")
+                print(f"  Token '{tokens_str[1]}': probability = {token_probs[0]:.6f}, log probability = {log_probs[0]:.3f}")
             else:
                 # Multiple tokens case: print each token's probability and its log probability
                 for i in range(1, len(tokens_str)):
-                    print(f"  Token '{tokens_str[i]}': probability = {token_probs[i-1]:.3f}, log probability = {log_probs[i-1]:.3f}")
+                    print(f"  Token '{tokens_str[i]}': probability = {token_probs[i-1]:.6f}, log probability = {log_probs[i-1]:.3f}")
                 print(f"  combined log probability of the PII phrase: {joint_log_prob:.3f}")
