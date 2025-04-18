@@ -26,7 +26,7 @@ def compute_pii_token_probs(pii_text, tokenizer, model):
     token_probs = []
  
     #compute probability for each token (starting from the second token, as GPT-2 computes
-    # each token probability conditioned on the preceding context)
+    #each token probability conditioned on the preceding context)
     for i in range(1, len(tokens)):
         context = torch.tensor([tokens[:i]])
         with torch.no_grad():
