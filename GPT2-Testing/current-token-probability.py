@@ -5,9 +5,8 @@ from presidio_analyzer import AnalyzerEngine
 
 
 def compute_pii_token_probs(pii_text, tokenizer, model):
-    """Compute token-level probabilities for a given PII text using a GPT-2 model.
-
-    If the PII text does not start with a space, one is added, because GPT-2's tokenization
+    """""
+    If the PII text does not start with a space, add one, because GPT-2's tokenization
     is sensitive to whitespace. Returns a tuple:
       (list of token strings, list of probabilities, list of log probabilities, joint log probability)
     """
@@ -23,7 +22,7 @@ def compute_pii_token_probs(pii_text, tokenizer, model):
     token_probs = []
 
     #compute probability for each token (starting from the second token, as GPT-2 computes
-    # each token probability conditioned on the preceding context)
+    #each token probability conditioned on the preceding context)
     for i in range(1, len(tokens)):
         context = torch.tensor([tokens[:i]])
         with torch.no_grad():
@@ -41,12 +40,12 @@ if __name__ == '__main__':
     #prompt user for input text
     text = input("Enter phrase: ")
 
-    # Load GPT-2 model and tokenizer
+    # load gpt
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2-large")
     model = GPT2LMHeadModel.from_pretrained("gpt2-large")
     model.eval()
 
-    # Initialize the Presidio AnalyzerEngine for PII detection
+    #initialize  Presidio AnalyzerEngine for PII detection
     analyzer = AnalyzerEngine()
     pii_results = analyzer.analyze(text=text, language="en")
 
@@ -55,20 +54,20 @@ if __name__ == '__main__':
     else:
         print("detected PII entities:")
         for res in pii_results:
-            # Extract the detected PII text from the original text using the start and end indices
+            #extract  detected PII text from the original text using the start and end indices
             pii_text = text[res.start:res.end]
             print(f"Entity: {res.entity_type} -> \"{pii_text}\"")
 
-            # Compute token-level probabilities for the extracted PII text
+            #compute token-level probabilities for the extracted PII text
             tokens_str, token_probs, log_probs, joint_log_prob = compute_pii_token_probs(pii_text, tokenizer, model)
             
             if len(token_probs) == 0:
                 print("  not enough tokens tocompute")
             elif len(token_probs) == 1:
-                # Single token case
+                #single token case
                 print(f"  Token '{tokens_str[1]}': probability = {token_probs[0]:.3f}, log probability = {log_probs[0]:.3f}")
             else:
-                # Multiple tokens case: print each token's probability and its log probability
+                #multiple tokens case: 
                 for i in range(1, len(tokens_str)):
                     print(f"  Token '{tokens_str[i]}': probability = {token_probs[i-1]:.3f}, log probability = {log_probs[i-1]:.3f}")
                 print(f"  combined log probability of the PII phrase: {joint_log_prob:.3f}")
