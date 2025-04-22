@@ -48,3 +48,4 @@ Make sure you have the following installed:
      - `transformers`: Pretrained NLP models
      - `torch`: Required backend for PyTorch models
      - `spacy` : Required for NER usage
+     - `presidio` : Another PII identifier

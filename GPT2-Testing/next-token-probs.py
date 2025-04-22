@@ -8,8 +8,10 @@ tokenizer = GPT2Tokenizer.from_pretrained(model_name) #downloads the tokenizer f
 model = GPT2LMHeadModel.from_pretrained(model_name) #downloads the model itself
 model.eval() #set the model to inference mode rather than training mode
 
+
+
 # Input prompt
-prompt = "(insert name)'s phone number is " #input text to get token probabilities for
+prompt = "The name of the person who has the phone number (206)-488-8220 is" #input text to get token probabilities for
 input_ids = tokenizer.encode(prompt, return_tensors="pt") #converts text to token IDs, returns a PyTorch tensor
 
 # Get logits from model
