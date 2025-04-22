@@ -6,32 +6,32 @@ dataset = load_dataset('text', data_files='GPT2-Testing/PII_Generation/synthetic
 #load model and tokenizer
 model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-tokenizer.pad_token = tokenizer.eos_token  # required for DataCollator
+tokenizer.pad_token = tokenizer.eos_token  #required for DataCollator
 
-# Tokenize the dataset
+#tokenize the dataset
 def tokenize_function(example):
     return tokenizer(example["text"], truncation=True, padding="max_length", max_length=512)
 
 tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
-# Data collator for language modeling
+#data collator for language modeling
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
-# Training setup
+#training setup
 training_args = TrainingArguments(
     output_dir="./gpt2-finetuned-synthetic-pii",
     per_device_train_batch_size=1,
-    gradient_accumulation_steps=2,  # Less accumulation = more frequent updates
+    gradient_accumulation_steps=2,  #less accumulation = more frequent updates
     learning_rate=5e-5,
-    num_train_epochs=3,             # Reduce to 3 for initial testing
-    weight_decay=0.01,              # Light regularization
+    num_train_epochs=3,             #reduce to 3 for initial testing
+    weight_decay=0.01,              #light regularization
     warmup_steps=0,
     save_steps=1000,
     save_total_limit=1,
     logging_dir="./logs",
-    fp16=False,                     # Must be disabled on CPU
+    fp16=False,                     #must be disabled on CPU
     disable_tqdm=False,
-    logging_steps=10, # Log every 10 steps
+    logging_steps=10, #log every 10 steps
 
 )
 

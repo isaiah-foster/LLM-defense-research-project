@@ -13,70 +13,70 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from presidio_analyzer import AnalyzerEngine
 from presidio_analyzer.predefined_recognizers import SpacyRecognizer
 
-# Add parent directory (GPT2-Testing) to the Python path
+#add parent directory (GPT2-Testing) to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Load GPT-2 model and tokenizer
+#load GPT-2 model and tokenizer
 model_name = "./gpt2_finetuned_pii"  # Path to the fine-tuned model
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
-model.eval()  # Set model to eval mode
+model.eval()  #set model to eval mode
 
-# Initialize Presidio Analyzer
+#initialize Presidio Analyzer
 analyzer = AnalyzerEngine()
 analyzer.registry.add_recognizer(SpacyRecognizer())
 
-# Load synthetic PII data
+#load synthetic PII data
 synthetic_pii_file = os.path.abspath("GPT2-Testing/PII_Generation/synthetic_pii.txt")
 with open(synthetic_pii_file, "r") as f:
     synthetic_pii_lines = f.readlines()
 
-# Randomly select 5 prompts
+#randomly select 5 prompts
 random_prompts = random.sample(synthetic_pii_lines, 5)
 
-# List to hold results
+#list to hold results
 results = []
 
 for prompt in random_prompts:
-    # Use Presidio to detect PII and truncate the prompt before the PII
+    #use Presidio to detect PII and truncate the prompt before the PII
     analysis_results = analyzer.analyze(text=prompt, entities=["PERSON"], language="en")
     if analysis_results:
         pii_start = analysis_results[0].start
         truncated_prompt = prompt[:pii_start].strip()
     else:
-        truncated_prompt = prompt.strip()  # If no PII detected, use the full prompt
+        truncated_prompt = prompt.strip()  #if no PII detected, use the full prompt
 
-    # Skip if the truncated prompt is empty or contains only whitespace
+    #skip if the truncated prompt is empty or contains only whitespace
     if not truncated_prompt or truncated_prompt.isspace():
         print(f"Skipping empty or whitespace-only truncated prompt for: {prompt}")
         continue
 
-    # Tokenize the truncated prompt
+    #tokenize the truncated prompt
     input_ids = tokenizer.encode(truncated_prompt, return_tensors="pt")
 
-    # Skip if tokenization results in an empty tensor
+    #skip if tokenization results in an empty tensor
     if input_ids is None or input_ids.size(1) == 0:
         print(f"Skipping empty tokenized input for: {truncated_prompt}")
         continue
 
-    # Generate likelihood outputs for the next tokens
+    #generate likelihood outputs for the next tokens
     with torch.no_grad():
         outputs = model(input_ids)
         logits = outputs.logits[:, -1, :]  # Get logits for the last token
         probabilities = torch.softmax(logits, dim=-1)
 
-    # Decode top-k tokens and their probabilities
+    #decode top-k tokens and their probabilities
     top_k = 10
     top_k_probs, top_k_indices = torch.topk(probabilities, top_k, dim=-1)
     top_k_tokens = [tokenizer.decode([idx]) for idx in top_k_indices[0]]
 
-    # Compare to real PII in the prompt
+    #compare to real PII in the prompt
     real_pii = None
     if analysis_results:
         real_pii = prompt[pii_start:].strip()
 
-    # Store results
+    #store results
     results.append({
         "truncated_prompt": truncated_prompt,
         "real_pii": real_pii,
@@ -84,7 +84,7 @@ for prompt in random_prompts:
         "top_k_probs": top_k_probs.tolist()[0]
     })
 
-# Write results to a file
+#write results to a file
 output_file = "GPT2-Testing/Extraction/extraction-tuned-outputs.txt"
 with open(output_file, "w") as f:
     for result in results:
