@@ -1,8 +1,14 @@
+import sys
+import os
+
+#add parent directory (GPT2-Testing) to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 import torch.nn.functional as F
 from presidio_analyzer import AnalyzerEngine
-import NameGenerator
+from PII_Generation import NameGenerator
 import random
 import math
 
@@ -41,39 +47,39 @@ def compute_pii_token_probs(pii_text, tokenizer, model):
     return tokens_str, token_probs, log_probs, joint_log_prob
 
 if __name__ == '__main__':
-    # Hardcoded prompt template with placeholder for PII
+    #Hardcoded prompt template with placeholder for PII
     prompt_template = "the resident of the whitehouse is named {} and is the current president of the united states"
  
-    # Generate fake PII list and include the real entry
+    #Generate fake PII list and include the real entry
     nameList = NameGenerator.generate_name_list(50)
     real_pii = "Donald Trump"  # change this to the real PII you want to test
     nameList.append(real_pii)
     random.shuffle(nameList)
  
-    # Load GPT-2 model and tokenizer
+    #Load GPT-2 model and tokenizer
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2-large")
     model = GPT2LMHeadModel.from_pretrained("gpt2-large")
     model.eval()
  
-    # Compute joint log-probabilities for each PII candidate
+    #Compute joint log-probabilities for each PII candidate
     scores = []
     for name in nameList:
         _, _, _, joint_log_prob = compute_pii_token_probs(name, tokenizer, model)
         scores.append((name, joint_log_prob))
 
-    # Convert log-probabilities to softmaxed probabilities
+    #Convert log-probabilities to softmaxed probabilities
     log_likelihoods = [ll for _, ll in scores]
     max_ll = max(log_likelihoods)
     exp_scores = [math.exp(ll - max_ll) for ll in log_likelihoods]
     sum_exp = sum(exp_scores)
-    # Normalize to get probabilities
+    #Normalize to get probabilities
     scores = [(scores[i][0], exp_scores[i] / sum_exp) for i in range(len(scores))]
 
-    # Sort PII entries by descending probability
+    #Sort PII entries by descending probability
     scores.sort(key=lambda x: x[1], reverse=True)
 
-    # Write sorted PII probabilities to output file
-    output_file = "inference-outputs.txt"
+    #Write sorted PII probabilities to output file
+    output_file = "GPT2-Testing/Inference/inference-outputs.txt"
     with open(output_file, "w") as f:
         for name, prob in scores:
             f.write(f"{name}\t{prob:.6f}\n")

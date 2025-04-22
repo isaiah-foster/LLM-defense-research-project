@@ -1,0 +1,91 @@
+"""
+Improved extraction attack script:
+- Randomly selects 5 prompts from synthetic_pii.txt.
+- Uses Presidio to truncate prompts before PII.
+- Compares likelihood outputs for next tokens to real PII.
+"""
+import sys
+import os
+import random
+import math
+import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.predefined_recognizers import SpacyRecognizer
+
+# Add parent directory (GPT2-Testing) to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Load GPT-2 model and tokenizer
+model_name = "./gpt2-finetuned-pii"  #path to the fine-tuned model
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model = GPT2LMHeadModel.from_pretrained(model_name)
+
+model.save_pretrained("./gpt2-finetuned-pii-final")
+tokenizer.save_pretrained("./gpt2-finetuned-pii-final")
+
+model.eval()  # Set model to eval mode
+
+# Initialize Presidio Analyzer
+analyzer = AnalyzerEngine()
+analyzer.add_recognizer(SpacyRecognizer())
+
+# Load synthetic PII data
+synthetic_pii_file = os.path.abspath("../PII_Generation/synthetic_pii.txt")
+with open(synthetic_pii_file, "r") as f:
+    synthetic_pii_lines = f.readlines()
+
+# Randomly select 5 prompts
+random_prompts = random.sample(synthetic_pii_lines, 5)
+
+# List to hold results
+results = []
+
+for prompt in random_prompts:
+    # Use Presidio to detect PII and truncate the prompt before the PII
+    analysis_results = analyzer.analyze(text=prompt, entities=["PERSON"], language="en")
+    if analysis_results:
+        pii_start = analysis_results[0].start
+        truncated_prompt = prompt[:pii_start].strip()
+    else:
+        truncated_prompt = prompt.strip()  # If no PII detected, use the full prompt
+
+    # Tokenize the truncated prompt
+    input_ids = tokenizer.encode(truncated_prompt, return_tensors="pt")
+
+    # Generate likelihood outputs for the next tokens
+    with torch.no_grad():
+        outputs = model(input_ids)
+        logits = outputs.logits[:, -1, :]  # Get logits for the last token
+        probabilities = torch.softmax(logits, dim=-1)
+
+    # Decode top-k tokens and their probabilities
+    top_k = 10
+    top_k_probs, top_k_indices = torch.topk(probabilities, top_k, dim=-1)
+    top_k_tokens = [tokenizer.decode([idx]) for idx in top_k_indices[0]]
+
+    # Compare to real PII in the prompt
+    real_pii = None
+    if analysis_results:
+        real_pii = prompt[pii_start:].strip()
+
+    # Store results
+    results.append({
+        "truncated_prompt": truncated_prompt,
+        "real_pii": real_pii,
+        "top_k_tokens": top_k_tokens,
+        "top_k_probs": top_k_probs.tolist()[0]
+    })
+
+# Write results to a file
+output_file = "GPT2-Testing/Extraction/extraction-tuned-outputs.txt"
+with open(output_file, "w") as f:
+    for result in results:
+        f.write(f"Prompt: {result['truncated_prompt']}\n")
+        f.write(f"Real PII: {result['real_pii']}\n")
+        f.write("Top-k Tokens and Probabilities:\n")
+        for token, prob in zip(result["top_k_tokens"], result["top_k_probs"]):
+            f.write(f"  {token}: {prob:.6f}\n")
+        f.write("\n")
+
+print(f"Improved likelihoods written to {output_file}")
