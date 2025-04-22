@@ -19,7 +19,7 @@ data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
 # Training setup
 training_args = TrainingArguments(
-    output_dir="./gpt2-finetuned-pii",
+    output_dir="./gpt2-finetuned-synthetic-pii",
     per_device_train_batch_size=1,
     gradient_accumulation_steps=2,  # Less accumulation = more frequent updates
     learning_rate=5e-5,
@@ -47,6 +47,7 @@ trainer = Trainer(
 
 
 #start training
-#trainer.train()
+trainer.train()
 
-tokenizer.save_pretrained("./gpt2-finetuned-pii")
+trainer.save_model("./gpt2-finetuned-synthetic-pii")
+tokenizer.save_pretrained("./gpt2-finetuned-synthetic-pii")
