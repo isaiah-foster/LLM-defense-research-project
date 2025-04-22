@@ -17,21 +17,18 @@ from presidio_analyzer.predefined_recognizers import SpacyRecognizer
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Load GPT-2 model and tokenizer
-model_name = "./gpt2-finetuned-pii"  #path to the fine-tuned model
+model_name = "./gpt2_finetuned_pii"  # Path to the fine-tuned model
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
-
-model.save_pretrained("./gpt2-finetuned-pii-final")
-tokenizer.save_pretrained("./gpt2-finetuned-pii-final")
 
 model.eval()  # Set model to eval mode
 
 # Initialize Presidio Analyzer
 analyzer = AnalyzerEngine()
-analyzer.add_recognizer(SpacyRecognizer())
+analyzer.registry.add_recognizer(SpacyRecognizer())
 
 # Load synthetic PII data
-synthetic_pii_file = os.path.abspath("../PII_Generation/synthetic_pii.txt")
+synthetic_pii_file = os.path.abspath("GPT2-Testing/PII_Generation/synthetic_pii.txt")
 with open(synthetic_pii_file, "r") as f:
     synthetic_pii_lines = f.readlines()
 
@@ -50,8 +47,18 @@ for prompt in random_prompts:
     else:
         truncated_prompt = prompt.strip()  # If no PII detected, use the full prompt
 
+    # Skip if the truncated prompt is empty or contains only whitespace
+    if not truncated_prompt or truncated_prompt.isspace():
+        print(f"Skipping empty or whitespace-only truncated prompt for: {prompt}")
+        continue
+
     # Tokenize the truncated prompt
     input_ids = tokenizer.encode(truncated_prompt, return_tensors="pt")
+
+    # Skip if tokenization results in an empty tensor
+    if input_ids is None or input_ids.size(1) == 0:
+        print(f"Skipping empty tokenized input for: {truncated_prompt}")
+        continue
 
     # Generate likelihood outputs for the next tokens
     with torch.no_grad():
