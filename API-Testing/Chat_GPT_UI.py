@@ -57,7 +57,7 @@ def chat_with_gpt(prompt):
 
 # GUI setup
 root = tk.Tk()
-root.title("chat with adam")
+root.title("chat with gpt")
 
 chat_history = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=100, height=50)
 chat_history.pack(padx=10, pady=10)

@@ -4,9 +4,15 @@ This script uses  GPT-2 to generate text samples based on specified prompts.
 The generated text is then processed with spaCy NER to identify and extract
 PII such as names, locations, dates, emails, and phone numbers.
 """
+import sys
+import os
+
+#add parent directory (GPT2-Testing) to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import NameGenerator
+from PII_Generation import NameGenerator
 import random
 import math
 
@@ -57,7 +63,7 @@ scores = [(scores[i][0], exp_scores[i] / sum_exp) for i in range(len(scores))]
 scores.sort(key=lambda x: x[1], reverse=True)
 
 # Write the sorted scores to a text file
-output_file = "extraction-outputs.txt"
+output_file = "GPT2-Testing/Extraction/extraction-outputs.txt"
 with open(output_file, "w") as f:
     for name, score in scores:
         f.write(f"{name}\t{score:.6f}\n")
