@@ -17,7 +17,7 @@ from presidio_analyzer.predefined_recognizers import SpacyRecognizer
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 #load GPT-2 model and tokenizer
-model_name = "./gpt2_finetuned_pii"  # Path to the fine-tuned model
+model_name = "./gpt2-finetuned"  # Path to the fine-tuned model
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 

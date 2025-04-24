@@ -21,16 +21,16 @@ from PII_Generation import NameGenerator
 
 # Initialize Presidio Analyzer
 analyzer = AnalyzerEngine()
-analyzer.add_recognizer(SpacyRecognizer())
+analyzer.registry.add_recognizer(SpacyRecognizer())
 
 # Load GPT-2 model and tokenizer
-model_name = "gpt2-large"  # Replace with your fine-tuned model if applicable
+model_name = "./gpt2-finetuned" 
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 model.eval()
 
 # Load synthetic PII data
-synthetic_pii_file = os.path.abspath("../PII_Generation/synthetic_pii.txt")
+synthetic_pii_file = os.path.abspath("GPT2-Testing/PII_Generation/synthetic_pii.txt")
 with open(synthetic_pii_file, "r") as f:
     synthetic_pii_lines = f.readlines()
 
@@ -91,7 +91,7 @@ for sentence in sampled_sentences:
     })
 
 # Write results to a file
-output_file = "GPT2-Testing/Inference/inference-attack-outputs.txt"
+output_file = "GPT2-Testing/Inference/inference-tuned-outputs.txt"
 with open(output_file, "w") as f:
     for result in results:
         f.write(f"Original Sentence: {result['original_sentence']}\n")

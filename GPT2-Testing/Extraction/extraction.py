@@ -17,7 +17,7 @@ import random
 import math
 
 #load GPT-2 model and tokenizer
-model_name = "gpt2-large"
+model_name = "gpt2"
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 model.eval() #set model to eval mode rather than training mode

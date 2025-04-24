@@ -10,7 +10,7 @@ __pycache__/
 #API_Key.txt
 
 #My finetuned llm based on gpt2 small. Include when model is properly trained and ready for use.
-gpt2_finetuned_pii/
+**/gpt2-finetuned/
 
 # C extensions
 *.so

@@ -6,7 +6,7 @@ This project uses Hugging Face's `transformers` library to run NLP models locall
 
 Make sure you have the following installed:
 
-- **Python**: 3.8-3.12 needed to run spaCy  
+- **Python**: 3.12.10 (Torch does not have support for 3.13 yet)
   Check your version:
   ```bash
   python --version
@@ -18,7 +18,10 @@ Make sure you have the following installed:
   pip --version
   ```
 
+- **Download Python** at https://www.python.org/downloads/release/python-31210/ 
+
 - **VSCode** with the **Python extension** (recommended for development)
+  Switch to 3.12.10 interpreter in your IDE
 
 ##  Setup Instructions (Windows CMD or Terminal)
 
@@ -35,17 +38,31 @@ Make sure you have the following installed:
    ```
 
 
-3. **Switch to a virtual environment if you'd prefer**
-    Use venv or conda in the correct range of python distributions
+3. **Create a New Python Virtual Environment (venv)**
+    ```bash
+    python -m venv .venv
+    ```
 
 
-4. **Install Transformers and dependencies:**
+4. **Install All Dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install --upgrade -r requirements.txt
    ```
+   - KNOWN ISSUE: Torch and Transformers may not include after installing requirements.txt
+      If this issue occurs, install them manually afterwards.
+      ```bash
+      pip install torch
+      ```
+      ```bash
+      pip install transformers
+      ```
+
 
    - This installs:
      - `transformers`: Pretrained NLP models
      - `torch`: Required backend for PyTorch models
      - `spacy` : Required for NER usage
      - `presidio` : Another PII identifier
+     - `faker` : Used to generate synthetic PII
+     - `datasets` : Preprocesses text for finetuning/training
+     - `accelerate` : Improves LLM performance on GPUs
