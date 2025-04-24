@@ -9,8 +9,13 @@ __pycache__/
 #API Key
 #API_Key.txt
 
+<<<<<<< HEAD
 #Model
 **/gpt2-finetuned-synthetic-pii/
+=======
+#My finetuned llm based on gpt2 small. Include when model is properly trained and ready for use.
+**/gpt2-finetuned/
+>>>>>>> 1d7bd6dd21b6b61b8f04286d519620c52e250976
 
 # C extensions
 *.so
