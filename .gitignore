@@ -9,6 +9,9 @@ __pycache__/
 #API Key
 #API_Key.txt
 
+#Model
+**/gpt2-finetuned-synthetic-pii/
+
 # C extensions
 *.so
 
