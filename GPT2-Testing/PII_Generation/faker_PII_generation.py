@@ -7,7 +7,7 @@ Faker.seed(42)
 random.seed(42)
 
 # Set how many entries you want
-num_entries = 1000
+num_entries = 50
 
 # File to write to
 output_file = "GPT2-Testing/PII_Generation/synthetic_pii.txt"

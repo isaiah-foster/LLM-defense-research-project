@@ -7,43 +7,43 @@ Improved extraction attack script:
 import sys
 import os
 import random
-import math
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from presidio_analyzer import AnalyzerEngine
-from presidio_analyzer.predefined_recognizers import SpacyRecognizer
+from presidio_analyzer.nlp_engine import NlpEngineProvider
 
 # Add parent directory (GPT2-Testing) to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Load GPT-2 model and tokenizer
-model_name = "./gpt2-finetuned-pii"  #path to the fine-tuned model
+model_name = "./gpt2-finetuned-synthetic-pii"  #path to the fine-tuned model
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
-model.save_pretrained("./gpt2-finetuned-pii-final")
-tokenizer.save_pretrained("./gpt2-finetuned-pii-final")
-
 model.eval()  # Set model to eval mode
 
-# Initialize Presidio Analyzer
-analyzer = AnalyzerEngine()
-analyzer.add_recognizer(SpacyRecognizer())
+
+
+# Initialize Presidio Analyzer with spaCy NLP engine
+nlp_engine_provider = NlpEngineProvider(nlp_configuration={"nlp_engine_name": "spacy", "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}]})
+nlp_engine = nlp_engine_provider.create_engine()
+analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
+
 
 # Load synthetic PII data
-synthetic_pii_file = os.path.abspath("../PII_Generation/synthetic_pii.txt")
+synthetic_pii_file = os.path.abspath("GPT2-Testing/PII_Generation/synthetic_pii.txt")
 with open(synthetic_pii_file, "r") as f:
     synthetic_pii_lines = f.readlines()
 
 # Randomly select 5 prompts
-random_prompts = random.sample(synthetic_pii_lines, 5)
+random_prompts = random.sample(synthetic_pii_lines, 20)
 
 # List to hold results
 results = []
 
 for prompt in random_prompts:
     # Use Presidio to detect PII and truncate the prompt before the PII
-    analysis_results = analyzer.analyze(text=prompt, entities=["PERSON"], language="en")
+    analysis_results = analyzer.analyze(text=prompt, entities=["PERSON", "PHONE_NUMBER", "EMAIL_ADDRESS", "URL", "ZIP_CODE"], language="en")
     if analysis_results:
         pii_start = analysis_results[0].start
         truncated_prompt = prompt[:pii_start].strip()
