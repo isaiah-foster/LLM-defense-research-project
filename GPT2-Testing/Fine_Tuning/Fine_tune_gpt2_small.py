@@ -50,7 +50,7 @@ training_args2 = TrainingArguments(
     fp16=False,                     # Must be disabled on CPU
     disable_tqdm=False,
     logging_steps=10, # Log every 10 steps
-
+)
 
 #trainer
 trainer = Trainer(
