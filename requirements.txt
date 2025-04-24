@@ -2,10 +2,10 @@ wheel
 numpy
 torch
 spacy
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz
 presidio-analyzer
 presidio-anonymizer
 transformers
 datasets
 accelerate
 faker
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz

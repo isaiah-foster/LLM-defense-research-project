@@ -48,10 +48,11 @@ Make sure you have the following installed:
    ```bash
    pip install --upgrade -r requirements.txt
    ```
-   - KNOWN ISSUE: Torch and Transformers may not include after installing requirements.txt
-      If this issue occurs, install them manually afterwards.
+   - KNOWN ISSUE: Some packages may not include after installing requirements.txt
+      If this issue occurs, install them manually afterwards with the names provided
+      in requirements.txt
       ```bash
-      pip install torch
+      pip install package name
       ```
       ```bash
       pip install transformers
