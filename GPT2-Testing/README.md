@@ -54,9 +54,6 @@ Make sure you have the following installed:
       ```bash
       pip install package name
       ```
-      ```bash
-      pip install transformers
-      ```
 
 
    - This installs:
