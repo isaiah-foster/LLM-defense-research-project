@@ -2,7 +2,6 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 import torch.nn.functional as F
 from presidio_analyzer import AnalyzerEngine
-import NameGenerator
 import random
 import math
 
@@ -22,12 +21,14 @@ def compute_pii_token_probs(pii_text, tokenizer, model):
     if not pii_text.startswith(' '):
         pii_text = ' ' + pii_text
     #splits the first and last name and adds them to the tokenizer's vocabulary
+    '''
     if split_input == True :
      first, last = pii_text.split()
      last_with_space = last
      tokenizer.add_tokens(first)
      tokenizer.add_tokens(last_with_space)
      model.resize_token_embeddings(len(tokenizer))
+     '''
      #prints the input to be tokenzied
     print("Input: " + pii_text)
      #tokenize PII text
@@ -58,7 +59,7 @@ def compute_pii_token_probs(pii_text, tokenizer, model):
  
     joint_log_prob = sum(log_probs)
     return tokens_str, token_probs, log_probs, joint_log_prob
-
+'''
 if __name__ == '__main__':
     # Hardcoded prompt template with placeholder for PII
     prompt_template = "the resident of the whitehouse is named {} and is the current president of the united states"
@@ -125,3 +126,4 @@ if __name__ == '__main__':
                 for i in range(1, len(tokens_str)):
                     print(f"  Token '{tokens_str[i]}': probability = {token_probs[i-1]:.6f}, log probability = {log_probs[i-1]:.3f}")
                 print(f"  combined log probability of the PII phrase: {joint_log_prob:.3f}")
+                '''
