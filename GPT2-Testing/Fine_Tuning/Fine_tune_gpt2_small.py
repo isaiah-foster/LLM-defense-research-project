@@ -39,17 +39,17 @@ training_args = TrainingArguments(
 training_args2 = TrainingArguments(
     output_dir="./gpt2-finetuned",
     per_device_train_batch_size=1,
-    gradient_accumulation_steps=1,  # Less accumulation = more frequent updates
-    learning_rate=1e-4,
-    num_train_epochs=30,             # Reduce to 3 for initial testing
-    weight_decay=0.001,              # Light regularization
+    gradient_accumulation_steps=1,  #less accumulation = more frequent updates
+    learning_rate=75e-6,
+    num_train_epochs=15,             #number of training epochs
+    weight_decay=0.0015,              #light regularization
     warmup_steps=0,
     save_steps=1000,
     save_total_limit=1,
     logging_dir="./logs",
-    fp16=False,                     # Must be disabled on CPU
+    fp16=False,                     #needs to be disabled on CPU
     disable_tqdm=False,
-    logging_steps=10, # Log every 10 steps
+    logging_steps=10, #log to terminal every 10 steps
 )
 
 #trainer

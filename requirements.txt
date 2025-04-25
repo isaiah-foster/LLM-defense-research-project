@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-torch
-transformers
-numpy
-spacy
-presidio-analyzer
-presidio-anonymizer
-faker
-datasets
-accelerate
-=======
 wheel
+setuptools
 numpy
 torch
 spacy
@@ -19,5 +9,4 @@ transformers
 datasets
 accelerate
 faker
->>>>>>> 1d7bd6dd21b6b61b8f04286d519620c52e250976
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz

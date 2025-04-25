@@ -88,7 +88,7 @@ output_file = "GPT2-Testing/Extraction/extraction-tuned-outputs.txt"
 with open(output_file, "w") as f:
     for result in results:
         f.write(f"Prompt: {result['truncated_prompt']}\n")
-        f.write(f"Real PII: {result['real_pii']}\n")
+        f.write(f"Remaining sampled sentence: {result['real_pii']}\n")
         f.write("Top-k Tokens and Probabilities:\n")
         for token, prob in zip(result["top_k_tokens"], result["top_k_probs"]):
             f.write(f"  {token}: {prob:.6f}\n")
