@@ -41,7 +41,7 @@ training_args2 = TrainingArguments(
     per_device_train_batch_size=1,
     gradient_accumulation_steps=1,  # Less accumulation = more frequent updates
     learning_rate=1e-4,
-    num_train_epochs=20,             # Reduce to 3 for initial testing
+    num_train_epochs=30,             # Reduce to 3 for initial testing
     weight_decay=0.001,              # Light regularization
     warmup_steps=0,
     save_steps=1000,
@@ -55,7 +55,7 @@ training_args2 = TrainingArguments(
 #trainer
 trainer = Trainer(
     model=model,
-    args=training_args,
+    args=training_args2,
     train_dataset=tokenized_dataset["train"],
     tokenizer=tokenizer,
     data_collator=data_collator,

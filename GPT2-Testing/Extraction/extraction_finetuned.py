@@ -7,7 +7,6 @@ Improved extraction attack script:
 import sys
 import os
 import random
-import math
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from presidio_analyzer import AnalyzerEngine
@@ -67,7 +66,7 @@ for prompt in random_prompts:
         probabilities = torch.softmax(logits, dim=-1)
 
     #decode top-k tokens and their probabilities
-    top_k = 10
+    top_k = 5
     top_k_probs, top_k_indices = torch.topk(probabilities, top_k, dim=-1)
     top_k_tokens = [tokenizer.decode([idx]) for idx in top_k_indices[0]]
 
