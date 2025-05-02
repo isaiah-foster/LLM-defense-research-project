@@ -11,6 +11,7 @@ __pycache__/
 
 #My finetuned llm based on gpt2 small. Include when model is properly trained and ready for use.
 **/gpt2-finetuned/
+**models/
 
 # C extensions
 *.so

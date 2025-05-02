@@ -25,7 +25,7 @@ analyzer = AnalyzerEngine()
 analyzer.registry.add_recognizer(SpacyRecognizer())
 
 # Load GPT-2 model and tokenizer
-model_name = "./gpt2-finetuned" 
+model_name = "./GPT2-Testing/models/gpt2-finetuned" 
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 model.eval()
@@ -37,24 +37,16 @@ synthetic_pii_file = os.path.abspath("GPT2-Testing/PII_Generation/synthetic_pii.
 with open(synthetic_pii_file, "r") as f:
     synthetic_pii_lines = f.readlines()
 
-# Function to compute probability of a candidate name tokens in the sentence
-def compute_candidate_prob(sentence, candidate, tokenizer, model, start_pos):
-    tokens = tokenizer.encode(sentence, return_tensors="pt")[0]
-    candidate_tokens = tokenizer.encode(candidate)
-    # Ensure candidate tokens match the tokens at start_pos
-    if not torch.equal(tokens[start_pos:start_pos+len(candidate_tokens)], torch.tensor(candidate_tokens)):
-        return 0.0
+
+# Function to compute total log-probability of a sentence under the model
+def compute_logprob(text, model, tokenizer):
+    inputs = tokenizer(text, return_tensors="pt")
+    input_ids = inputs["input_ids"]
+    inputs = {k: v.to(model.device) for k, v in inputs.items()}
     with torch.no_grad():
-        outputs = model(tokens.unsqueeze(0))
-        logits = outputs.logits
-        # Compute probability of candidate tokens given previous tokens
-        probs = 1.0
-        for i in range(len(candidate_tokens)):
-            token_index = start_pos + i
-            token_logits = logits[0, token_index-1] if token_index > 0 else logits[0, 0]
-            token_prob = torch.softmax(token_logits, dim=-1)[candidate_tokens[i]].item()
-            probs *= token_prob
-        return probs
+        outputs = model(**inputs, labels=input_ids)
+        logprob = -outputs.loss.item() * input_ids.size(1)  # total log-probability
+    return logprob
 
 # Randomly sample sentences and perform inference
 results = []
@@ -78,24 +70,15 @@ for sentence in sampled_sentences:
     candidates = fake_pii_list + [real_pii]
     random.shuffle(candidates)
 
-    candidate_scores = []
+    candidate_logprobs = []
     for candidate in candidates:
         filled_sentence = sentence[:pii_start] + candidate + sentence[pii_end:]
-        tokens = tokenizer.encode(filled_sentence)
-        # Find start_pos of candidate tokens in the tokenized sentence
-        # We'll find the tokenized prefix length before candidate by tokenizing sentence[:pii_start]
-        prefix_tokens = tokenizer.encode(sentence[:pii_start])
-        start_pos = len(prefix_tokens)
-        prob = compute_candidate_prob(filled_sentence, candidate, tokenizer, model, start_pos)
-        candidate_scores.append((candidate, prob))
+        logprob = compute_logprob(filled_sentence, model, tokenizer)
+        candidate_logprobs.append((candidate, logprob))
 
-    # Normalize scores to probabilities
-    total_score = sum(score for _, score in candidate_scores)
-    if total_score == 0:
-        continue  # Skip if all candidate probabilities are zero
-    normalized_scores = [(candidate, score / total_score) for candidate, score in candidate_scores]
-
-    # Sort candidates by descending probability
+    logprob_values = torch.tensor([score for _, score in candidate_logprobs])
+    probs = torch.softmax(logprob_values, dim=0).tolist()
+    normalized_scores = list(zip([c for c, _ in candidate_logprobs], probs))
     normalized_scores.sort(key=lambda x: x[1], reverse=True)
 
     # Store results
