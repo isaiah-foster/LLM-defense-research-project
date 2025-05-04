@@ -49,8 +49,9 @@ def main():
         key_index = entry["key_index"]
         selective_forget(model, tokenizer, text, key_index, device)
 
-    # Save updated model
+    # Save updated model and tokenizer
     model.save_pretrained("./GPT2-Testing/models/gpt2-forget")
+    tokenizer.save_pretrained("./GPT2-Testing/models/gpt2-forget")
 
 if __name__ == "__main__":
     main()
