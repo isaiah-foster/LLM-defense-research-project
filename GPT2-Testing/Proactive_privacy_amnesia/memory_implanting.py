@@ -54,6 +54,7 @@ def main():
 
     # Save final model
     model.save_pretrained("./GPT2-Testing/models/gpt2-final")
+    tokenizer.save_pretrained("./GPT2-Testing/models/gpt2-final")
 
 if __name__ == "__main__":
     main()

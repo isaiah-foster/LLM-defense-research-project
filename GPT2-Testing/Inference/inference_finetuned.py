@@ -25,7 +25,7 @@ analyzer = AnalyzerEngine()
 analyzer.registry.add_recognizer(SpacyRecognizer())
 
 # Load GPT-2 model and tokenizer
-model_name = "./GPT2-Testing/models/gpt2-finetuned" 
+model_name = "./GPT2-Testing/models/gpt2-final" 
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 model.eval()

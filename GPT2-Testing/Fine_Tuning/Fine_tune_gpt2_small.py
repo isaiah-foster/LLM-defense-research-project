@@ -40,8 +40,8 @@ training_args2 = TrainingArguments(
     output_dir="./GPT2-Testing/models/gpt2-finetuned",
     per_device_train_batch_size=1,
     gradient_accumulation_steps=1,  #less accumulation = more frequent updates
-    learning_rate=75e-6,
-    num_train_epochs=15,             #number of training epochs
+    learning_rate=5e-5,
+    num_train_epochs=16,             #number of training epochs
     weight_decay=0.0015,              #light regularization
     warmup_steps=0,
     save_steps=1000,

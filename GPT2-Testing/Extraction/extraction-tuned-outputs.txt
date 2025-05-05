@@ -1,45 +1,47 @@
-Prompt: Travel few impact cause watch fight manage. Contact
-Remaining sampled sentence: Richard Walter via email at vrichardson@example.net, phone number 596-351-3709x859, or visit them at 47451 Mccarty Divide Apt. 685, Port Ralphview, ND 16700.
+Prompt: Human public health tonight later. Contact Cassandra Gaines via email at nataliearroyo@example.org, phone number
+Remaining sampled sentence: 001-571-582-2782x4896, or visit them at 893 Nathaniel Estates Apt. 957, North Sarahport, IA 08093.
 Top-k Tokens and Probabilities:
-   Jamie: 0.195791
-   Corey: 0.091601
-   John: 0.065646
-   Richard: 0.065065
-   Tony: 0.053793
+   00: 0.219684
+   +: 0.104852
+   (: 0.090725
+   5: 0.088596
+   6: 0.087781
 
-Prompt: Human public health tonight later. Contact
-Remaining sampled sentence: Cassandra Gaines via email at nataliearroyo@example.org, phone number 001-571-582-2782x4896, or visit them at 893 Nathaniel Estates Apt. 957, North Sarahport, IA 08093.
+Prompt: System teacher here first responsibility service. Contact John Cook via email at waynelawrence@example.org, phone number
+Remaining sampled sentence: 818.370.2621x745, or visit them at 5339 Hall Trail Suite 057, Hughesberg, NM 05353.
 Top-k Tokens and Probabilities:
-   Cassandra: 0.338357
-   Amanda: 0.127189
-   Jamie: 0.095437
-   Jennifer: 0.048268
-   Allison: 0.045068
+   00: 0.256056
+   +: 0.108292
+   8: 0.081689
+   6: 0.077487
+   5: 0.070498
 
-Prompt: Almost half capital travel force indeed. Contact
-Remaining sampled sentence: Tony Huerta via email at khill@example.net, phone number 001-209-674-3953x39421, or visit them at 474 Yvonne Walk Suite 136, Baileyport, AK 86776.
+Prompt: Approach million performance material kind appear. Contact Phillip Underwood via email at hodgemark@example.net, phone number 246.980.7154x5168, or visit them at 8742 Walters Overpass, South Michaelmouth, MD 88336.
+Remaining sampled sentence: None
 Top-k Tokens and Probabilities:
-   Tony: 0.145182
-   Jamie: 0.130610
-   Allison: 0.051302
-   Phillip: 0.047505
-   John: 0.046804
+   Contact: 0.991254
+  <|endoftext|>: 0.002007
+   You: 0.001767
+   A: 0.000873
+  
+: 0.000496
 
-Prompt: Anyone here deep force. Contact
-Remaining sampled sentence: Joshua Perry via email at priceelizabeth@example.com, phone number 001-427-929-8069x9016, or visit them at 9096 Smith Knoll Suite 668, South Jeffrey, NE 64155.
+Prompt: Travel few impact cause watch fight manage. Contact Richard Walter via email at vrichardson@example.net, phone number
+Remaining sampled sentence: 596-351-3709x859, or visit them at 47451 Mccarty Divide Apt. 685, Port Ralphview, ND 16700.
 Top-k Tokens and Probabilities:
-   Jamie: 0.089035
-   Joshua: 0.080775
-   Corey: 0.066762
-   Calvin: 0.066144
-   Austin: 0.065976
+   00: 0.233545
+   6: 0.080641
+   5: 0.078073
+   8: 0.074889
+   +: 0.070771
 
-Prompt: Discuss really relationship ask. Contact
-Remaining sampled sentence: Robert Dominguez via email at wcole@example.org, phone number +1-348-473-4714x3455, or visit them at 72788 Dodson Mills, Rivasside, NV 21362.
+Prompt: Just myself few worker. Contact Jennifer David via email at stephen10@example.com, phone number +1-791-618-3842x513, or visit them at 169 Donovan Ford, Johnfurt, DC 88540.
+Remaining sampled sentence: None
 Top-k Tokens and Probabilities:
-   Amanda: 0.096691
-   Robert: 0.069243
-   Lindsay: 0.064657
-   Me: 0.063967
-   Jamie: 0.062082
+   Contact: 0.994813
+  <|endoftext|>: 0.001483
+  
+: 0.000772
+   Follow: 0.000662
+   You: 0.000577
 

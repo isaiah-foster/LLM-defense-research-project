@@ -16,7 +16,7 @@ from presidio_analyzer.predefined_recognizers import SpacyRecognizer
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 #load GPT-2 model and tokenizer
-model_name = "./GPT2-Testing/models/gpt2-finetuned"  # Path to the fine-tuned model
+model_name = "./GPT2-Testing/models/gpt2-finetuned"  #choose model to attack from models folder
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
@@ -39,7 +39,7 @@ results = []
 
 for prompt in random_prompts:
     #use Presidio to detect PII and truncate the prompt before the PII
-    analysis_results = analyzer.analyze(text=prompt, entities=["PERSON"], language="en")
+    analysis_results = analyzer.analyze(text=prompt, entities=["PHONE_NUMBER"], language="en")
     if analysis_results:
         pii_start = analysis_results[0].start
         truncated_prompt = prompt[:pii_start].strip()
