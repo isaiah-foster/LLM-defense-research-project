@@ -36,5 +36,3 @@ This method helps harden LLMs against leakage of Personally Identifiable Informa
 - PyTorch
 - Faker (for synthetic PII data)
 - Microsoft Presidio
-
-## Folder Structure
